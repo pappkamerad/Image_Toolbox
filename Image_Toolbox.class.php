@@ -70,7 +70,7 @@ if (!defined('IMAGE_TOOLBOX_BLEND_OVERLAY')) {
  * @copyright 2003, Martin Theimer
  * @package Image_Toolbox
  * @link http://sourceforge.net/projects/image-toolbox
- * @version [CVS] $Id$
+ * @version 1.0.1
  */
 class Image_Toolbox {
 
