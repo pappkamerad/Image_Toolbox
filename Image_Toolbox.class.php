@@ -672,7 +672,6 @@ class Image_Toolbox {
 					trigger_error($this->_error_prefix . 'Imagetype ('.$this->_types[$output_type]['ext'].') not supported for creating/writing.', E_USER_ERROR);
 					return null;
 				}
-				header ('Content-type: ' . $this->_types[$output_type]['mime']);
 				imagepng($this->_img['main']['resource'], $filename);
 				break;
 				
