@@ -898,6 +898,10 @@ class Image_Toolbox {
 		imagecopy($this->_img['target']['resource'], $dummy, $cpy_w_offset2, $cpy_h_offset2, 0, 0, $this->_img['target']['width'], $this->_img['target']['height']);
 		imagedestroy($dummy);
 		
+		if ($mode == 2) {
+			$this->_img['target']['width'] = $width;
+            $this->_img['target']['height'] = $height;
+        }
 		//update _img['main'] with new data
 		foreach ($this->_img['target'] as $key => $value) {
 			$this->_img['main'][$key] = $value;
