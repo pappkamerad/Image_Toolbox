@@ -715,6 +715,8 @@ class Image_Toolbox {
      * <ul>
      * <li>'resize' -> supported by every version of GD (fast but ugly resize of image)</li>
      * <li>'resample' -> only supported by GD version >= 2.0 (slower but antialiased resize of image)</li>
+     * <li>'workaround' -> supported by every version of GD (workaround function for bicubic resizing, downsizing, VERY slow!, taken from php.net comments)</li>
+     * <li>'workaround2' -> supported by every version of GD (alternative workaround function for bicubic resizing, down- and upsizing, VERY VERY slow!, taken from php.net comments)</li>
      * </ul>
      *
      * @param string|integer $method resize method
@@ -736,6 +738,22 @@ class Image_Toolbox {
 					return null;
 				}
 				$this->_resize_function = 'imagecopyresampled';
+				break;
+				
+			case 3:
+			case '3':
+			case 'resample_workaround':
+			case 'workaround':
+			case 'bicubic':
+				$this->_resize_function = '$this->_imageCopyResampledWorkaround';
+				break;
+				
+			case 4:
+			case '4':
+			case 'resample_workaround2':
+			case 'workaround2':
+			case 'bicubic2':
+				$this->_resize_function = '$this->_imageCopyResampledWorkaround2';
 				break;
 				
 			default:
@@ -1310,4 +1328,72 @@ class Image_Toolbox {
 		return true;
 	}
 	
+	/**
+     * workaround function for bicubic resizing. works well for downsizing only. VERY slow. taken from php.net comments
+     *
+     * @access private
+     */	
+	function _imageCopyResampledWorkaround(&$dst_img, &$src_img, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) {
+		/*
+		for ($i = 0; $i < imagecolorstotal($src_img); $i++)
+		{
+			$colors = ImageColorsForIndex ($src_img, $i);
+			ImageColorAllocate ($dst_img, $colors['red'],$colors['green'], $colors['blue']);
+		}
+		*/
+		$scaleX = ($src_w - 1) / $dst_w;
+		$scaleY = ($src_h - 1) / $dst_h;
+
+		$scaleX2 = $scaleX / 2.0;
+		$scaleY2 = $scaleY / 2.0;
+
+		for ($j = $src_y; $j < $src_y + $dst_h; $j++) {
+			$sY = $j * $scaleY;
+			for ($i = $src_x; $i < $src_x + $dst_w; $i++) {
+				$sX = $i * $scaleX;
+
+				$c1 = ImageColorsForIndex($src_img, ImageColorAt($src_img, (int) $sX, (int) $sY + $scaleY2));
+				$c2 = ImageColorsForIndex($src_img, ImageColorAt($src_img, (int) $sX, (int) $sY));
+				$c3 = ImageColorsForIndex($src_img, ImageColorAt($src_img, (int) $sX + $scaleX2, (int) $sY + $scaleY2));
+				$c4 = ImageColorsForIndex($src_img, ImageColorAt($src_img, (int) $sX + $scaleX2, (int) $sY));
+
+				$red = (integer) (($c1['red'] + $c2['red'] + $c3['red'] + $c4['red']) / 4);
+				$green = (integer) (($c1['green'] + $c2['green'] + $c3['green'] + $c4['green']) / 4);
+				$blue = (integer) (($c1['blue'] + $c2['blue'] + $c3['blue'] + $c4['blue']) / 4);
+
+				$color = ImageColorClosest ($dst_img, $red, $green,$blue);
+				ImageSetPixel ($dst_img, $dst_x + $i - $src_x, $dst_y + $j - $src_y,$color);
+			}
+		}
+	}
+
+	/**
+     * alternative workaround function for bicubic resizing. works well for downsizing and upsizing. VERY VERY slow. taken from php.net comments
+     *
+     * @access private
+     */	
+	function _imageCopyResampledWorkaround2(&$dst_img, &$src_img, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h) {
+		ImagePaletteCopy ($dst_img, $src_img);
+		$rX = $src_w / $dst_w;
+		$rY = $src_h / $dst_h;
+		$w = 0;
+		for ($y = $dst_y; $y < $dst_h; $y++) {
+			$ow = $w; $w = round(($y + 1) * $rY);
+			$t = 0;
+			for ($x = $dst_x; $x < $dst_w; $x++) {
+				$r = $g = $b = 0; $a = 0;
+				$ot = $t; $t = round(($x + 1) * $rX);
+				for ($u = 0; $u < ($w - $ow); $u++) {
+					for ($p = 0; $p < ($t - $ot); $p++) {
+						$c = ImageColorsForIndex ($src_img, ImageColorAt ($src_img, $ot + $p, $ow + $u));
+						$r += $c['red'];
+						$g += $c['green'];
+						$b += $c['blue'];
+						$a++;
+					}
+				}
+				ImageSetPixel ($dst_img, $x, $y, ImageColorClosest ($dst_img, $r / $a, $g / $a, $b / $a)); 
+			}
+		}
+	} 
 }
