@@ -20,7 +20,7 @@
  *
  * @author Martin Theimer <pappkamerad@decoded.net>
  * @copyright Copyright (C) 2003 Martin Theimer
- * @version 1.0.1
+ * @version 1.1.0
  * @package Image_Toolbox
  * @link http://sourceforge.net/projects/image-toolbox
  */
@@ -70,7 +70,7 @@ if (!defined('IMAGE_TOOLBOX_BLEND_OVERLAY')) {
  * @copyright 2003, Martin Theimer
  * @package Image_Toolbox
  * @link http://sourceforge.net/projects/image-toolbox
- * @version 1.0.2
+ * @version 1.1.0
  */
 class Image_Toolbox {
 
