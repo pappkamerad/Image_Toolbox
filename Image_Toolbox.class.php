@@ -15,13 +15,14 @@
  * for more details..
  *
  * The latest version of Image_Toolbox can be obtained from:
+ * http://sourceforge.net/projects/image-toolbox
  * http://www.phpclasses.org/image_toolbox
  *
  * @author Martin Theimer <pappkamerad@decoded.net>
  * @copyright Copyright (C) 2003 Martin Theimer
- * @version 0.9
+ * @version 1.0.1
  * @package Image_Toolbox
- * @link http://www.phpclasses.org/image_toolbox
+ * @link http://sourceforge.net/projects/image-toolbox
  */
  
 // $Id$
@@ -68,7 +69,7 @@ if (!defined('IMAGE_TOOLBOX_BLEND_OVERLAY')) {
  * @author Martin Theimer <pappkamerad@decoded.net>
  * @copyright 2003, Martin Theimer
  * @package Image_Toolbox
- * @link http://www.phpclasses.org/image_toolbox
+ * @link http://sourceforge.net/projects/image-toolbox
  * @version [CVS] $Id$
  */
 class Image_Toolbox {
@@ -887,6 +888,9 @@ class Image_Toolbox {
      * Blend two images.
      *
      * Original image and the image loaded with {@link addImage() addImage}<br>
+     * NOTE: This operation can take very long and is not intended for realtime use.
+     * (but of course depends on the power of your server :) )
+     *
      * IMPORTANT: {@link imagecopymerge() imagecopymerged} doesn't work with PHP 4.3.2. Bug ID: {@link http://bugs.php.net/bug.php?id=24816 24816}<br>
      *
      * $x:<br>
