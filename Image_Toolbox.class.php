@@ -70,7 +70,7 @@ if (!defined('IMAGE_TOOLBOX_BLEND_OVERLAY')) {
  * @copyright 2003, Martin Theimer
  * @package Image_Toolbox
  * @link http://sourceforge.net/projects/image-toolbox
- * @version 1.0.1
+ * @version 1.0.2
  */
 class Image_Toolbox {
 
@@ -169,15 +169,12 @@ class Image_Toolbox {
 		$this->_gd_version = substr($this->_gd_version_number, 0, strpos($this->_gd_version_number, '.'));
 		if ($this->_gd_version >= 2) {
 			$this->_imagecreatefunction = 'imagecreatetruecolor';
-		} else {
-			$this->_imagecreatefunction = 'imagecreate';
-		}
-		if (function_exists('imagecopyresampled')) {
 			$this->_resize_function = 'imagecopyresampled';
 		} else {
+			$this->_imagecreatefunction = 'imagecreate';
 			$this->_resize_function = 'imagecopyresized';
 		}
-				
+						
 		$this->_gd_ttf = $gd_info['FreeType Support'];
 		$this->_gd_ps = $gd_info['T1Lib Support'];
 		if ($gd_info['GIF Read Support']) {
