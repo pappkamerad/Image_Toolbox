@@ -752,8 +752,12 @@ class Image_Toolbox {
      *
      * if $height = 0 the new height will be calculated from the $width value preserving the correct aspectratio.<br>
      *
-     * if $crop is set to true the image will be cropped if necessary to preserve the aspectratio and avoid image distortions.<br>
-     * (default = false)
+     * $mode can be one of the following:<br>
+     * <ul>
+     * <li>0 -> image will be resized to the new output size, regardless of the original aspectratio. (default)</li>
+     * <li>1 -> image will be cropped if necessary to preserve the aspectratio and avoid image distortions.</li>
+     * <li>2 -> image will be resized preserving its original aspectratio. differences to the new outputsize will be filled with $bgcolor</li>
+     * </ul>
      *
      * if $autorotate is set to true the given $width and $height values may "change place" if the given image bias is different from the original one.<br>
      * if either $width or $height is 0, the new size will be applied to either the new width or the new height based on the bias value of the original image.<br>
@@ -761,14 +765,15 @@ class Image_Toolbox {
      *
      * @param integer $width new width of image
      * @param integer $height new height of image
-     * @param bool $crop use image cropping
+     * @param integer $mode resize mode
      * @param bool $autorotate use autorotating
+     * @param string $bgcolor background fillcolor (hexformat, e.g. '#FF0000')
      * @return bool true on success, otherwise false
      */
-	function newOutputSize($width, $height, $crop = false, $autorotate = false) {
+	function newOutputSize($width, $height, $mode = 0, $autorotate = false, $bgcolor = '#000000') {
 		if ($width > 0 && $height > 0 && is_int($width) && is_int($height)) {
 			//ignore aspectratio
-			if (!$crop) {
+			if (!$mode) {
 				//do not crop to get correct aspectratio
 				($width >= $height) ? ($this->_img['target']['bias'] = IMAGE_TOOLBOX_BIAS_HORIZONTAL) : ($this->_img['target']['bias'] = IMAGE_TOOLBOX_BIAS_VERTICAL);
 				if ($this->_img['main']['bias'] == $this->_img['target']['bias'] || !$autorotate) {
@@ -784,7 +789,7 @@ class Image_Toolbox {
 				$cpy_h = $this->_img['main']['height'];
 				$cpy_w_offset = 0;
 				$cpy_h_offset = 0;
-			} else {
+			} elseif ($mode == 1) {
 				//crop to get correct aspectratio
 				($width >= $height) ? ($this->_img['target']['bias'] = IMAGE_TOOLBOX_BIAS_HORIZONTAL) : ($this->_img['target']['bias'] = IMAGE_TOOLBOX_BIAS_VERTICAL);
 				if ($this->_img['main']['bias'] == $this->_img['target']['bias'] || !$autorotate) {
@@ -808,14 +813,34 @@ class Image_Toolbox {
 					$cpy_w_offset = 0;
 				}
 			}
+			elseif ($mode == 2) {
+				//fill remaining background with a color to keep aspectratio
+				$final_aspectratio = $width / $height;
+				if ($final_aspectratio < $this->_img['main']['aspectratio']) {
+					$this->_img['target']['width'] = $width;
+					$this->_img['target']['height'] = (integer) $width / $this->_img['main']['aspectratio'];
+					$cpy_w_offset2 = 0;
+					$cpy_h_offset2 = (integer) (($height - $this->_img['target']['height']) / 2);
+				}
+				else {
+					$this->_img['target']['height'] = $height;
+					$this->_img['target']['width'] = (integer) $height * $this->_img['main']['aspectratio'];
+					$cpy_h_offset2 = 0;
+					$cpy_w_offset2 = (integer) (($width - $this->_img['target']['width']) / 2);
+				}
+				$this->_img['target']['aspectratio'] = $this->_img['main']['aspectratio'];
+				$cpy_w = $this->_img['main']['width'];
+				$cpy_h = $this->_img['main']['height'];
+				$cpy_w_offset = 0;
+				$cpy_h_offset = 0;
+			}
 		} elseif (($width == 0 && $height > 0) || ($width > 0 && $height == 0) && is_int($width) && is_int($height)) {
 			//keep aspectratio
 			if ($autorotate == true) {
 				if ($this->_img['main']['bias'] == IMAGE_TOOLBOX_BIAS_HORIZONTAL && $width > 0) {
 					$height = $width;
 					$width = 0;
-				}
-				elseif ($this->_img['main']['bias'] == IMAGE_TOOLBOX_BIAS_VERTICAL && $height > 0) {
+				} elseif ($this->_img['main']['bias'] == IMAGE_TOOLBOX_BIAS_VERTICAL && $height > 0) {
 					$width = $height;
 					$height = 0;
 				}
@@ -843,8 +868,16 @@ class Image_Toolbox {
 		$functionname = $this->_imagecreatefunction;
 		$dummy = $functionname($this->_img['target']['width'] + 1, $this->_img['target']['height'] + 1);
 		eval($this->_resize_function . '($dummy, $this->_img["main"]["resource"], 0, 0, $cpy_w_offset, $cpy_h_offset, $this->_img["target"]["width"], $this->_img["target"]["height"], $cpy_w, $cpy_h);');
-		$this->_img['target']['resource'] = $functionname($this->_img['target']['width'], $this->_img['target']['height']);
-		imagecopy($this->_img['target']['resource'], $dummy, 0, 0, 0, 0, $this->_img['target']['width'], $this->_img['target']['height']);
+		if ($mode == 2) {
+			$this->_img['target']['resource'] = $functionname($width, $height);
+			$fillcolor = $this->_hexToPHPColor($bgcolor);
+            imagefill($this->_img['target']['resource'], 0, 0, $fillcolor);
+		} else {
+			$this->_img['target']['resource'] = $functionname($this->_img['target']['width'], $this->_img['target']['height']);
+			$cpy_w_offset2 = 0;
+			$cpy_h_offset2 = 0;
+		}
+		imagecopy($this->_img['target']['resource'], $dummy, $cpy_w_offset2, $cpy_h_offset2, 0, 0, $this->_img['target']['width'], $this->_img['target']['height']);
 		imagedestroy($dummy);
 		
 		//update _img['main'] with new data
