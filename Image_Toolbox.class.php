@@ -1261,7 +1261,7 @@ class Image_Toolbox {
 	function addText($text, $font, $size, $color, $x, $y, $angle = 0) {
 		global $HTTP_SERVER_VARS;
 		
-		if (substr($font, 0, 1) == DIRECTORY_SEPARATOR) {
+		if (substr($font, 0, 1) == DIRECTORY_SEPARATOR || (substr($font, 1, 1) == ":" && (substr($font, 2, 1) == "\\" || substr($font, 2, 1) == "/"))) {
 			$prepath = '';
 		} else {
 			$prepath = substr($HTTP_SERVER_VARS['SCRIPT_FILENAME'], 0, strrpos($HTTP_SERVER_VARS['SCRIPT_FILENAME'], DIRECTORY_SEPARATOR)) . DIRECTORY_SEPARATOR;
