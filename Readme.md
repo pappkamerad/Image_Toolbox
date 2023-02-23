@@ -1,3 +1,5 @@
+:warning: This package is no longer maintained :warning:
+
 # Image_Toolbox
 
 This class provides an easy to use library to the PHP GD-based image functions.
@@ -10,5 +12,7 @@ Features:
 
 ### Links
 [Documentation](./website/docs)
+
 [Examples](./website/examples)
+
 [PHPClasses](https://www.phpclasses.org/image_toolbox)
