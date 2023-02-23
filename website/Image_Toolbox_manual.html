@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Class Image_Toolbox::Image_Toolbox</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<meta name="generator" content="TM::MyCSV">
+<style type="text/css">
+body{background-color:white;}
+a{color:#006600;}
+h1 small{font-size:x-small;}
+h1 small a{color:black;}
+h2{background-color:#D2ECD2;padding:4px;}
+h3{background-color:#F4FAF4;padding:1px;border-top:2px solid #D2ECD2;}
+p{max-width:75ex;}
+.description{margin-left:40px;}
+address{font-size:smaller;margin-top:30px;}
+address,address a{color:#666666;}
+</style>
+</head>
+<body>
+
+<h1>Class Image_Toolbox::Image_Toolbox <small>by Martin Theimer <pappkamerad@decoded.net></small><br>
+<small>Version [CVS] $Id: Image_Toolbox.class.php,v 1.6 2003/11/04 19:49:16 mtheimer Exp $</small></h1>
+
+<p>PHP image manipulation class<br>
+<br>
+This class provides an easy to use library to the PHP GD-based imagefunctions</p>
+
+<p><b>Constructor Summary</b><br>
+<a href="#Image_Toolbox">Image_Toolbox</a> -- The class constructor.<br>
+<p><b>Method Summary</b><br>
+<a href="#addImage">addImage</a> -- Adds a new image resource based on the given parameters.<br>
+<a href="#addText">addText</a> -- Writes text over the image<br>
+<a href="#blend">blend</a> -- Blend two images.<br>
+<a href="#getServerFeatures">getServerFeatures</a> -- Returns an assocative array with information about the image features of this server<br>
+<a href="#newImage">newImage</a> -- Flush all image resources and init a new one<br>
+<a href="#newOutputSize">newOutputSize</a> -- Resize the current image<br>
+<a href="#output">output</a> -- Output a image to the browser<br>
+<a href="#save">save</a> -- Save a image to disk<br>
+<a href="#setResizeMethod">setResizeMethod</a> -- Sets the resize method of choice<br>
+<h2>Constructor Detail</h2>
+
+<h3 id="Image_Toolbox">Image_Toolbox</h3>
+<p>The class constructor.</p>
+<p><em></em> <strong>Image_Toolbox</strong> ( <em>void</em>)</p>
+<div class="description"><p>Determines the image features of the server and sets the according values.<br>
+Additionally you can specify a image to be created/loaded. like <a href="#addImage">addImage</a>.<br>
+<br>
+If no parameter is given, no image resource will be generated<br>
+Or:<br>
+<i>string</i> <b>$file</b> imagefile to load<br>
+Or:<br>
+<i>integer</i> <b>$width</b> imagewidth of new image to be created<br>
+<i>integer</i> <b>$height</b> imageheight of new image to be created<br>
+<i>string</i> <b>$fillcolor</b> optional fill the new image with this color (hexformat, e.g. '#FF0000')<br></p></div>
+
+<h2>Method Detail</h2>
+
+<h3 id="addImage">addImage</h3>
+<p>Adds a new image resource based on the given parameters.</p>
+<p><em></em> <strong>addImage</strong> ( <em>void</em>)</p>
+<div class="description"><p>It does not overwrite the existing image resource.<br>
+Instead it is used to load a second image to merge with the existing image.<br>
+<br>
+Parameter:<br>
+<i>string</i> <b>$file</b> imagefile to load<br>
+Or:<br>
+<i>integer</i> <b>$width</b> imagewidth of new image to be created<br>
+<i>integer</i> <b>$height</b> imageheight of new image to be created<br>
+<i>string</i> <b>$fillcolor</b> optional fill the new image with this color (hexformat, e.g. '#FF0000')<br></p></div>
+
+<h3 id="addText">addText</h3>
+<p>Writes text over the image</p>
+<p><em></em> <strong>addText</strong> ( <em>string</em> text, <em>string</em> font, <em>integer</em> size, <em>string</em> color, x, y [, <em>integer</em> angle])</p>
+<div class="description"><p>only TTF fonts are supported at the moment<br>
+<br>
+$x:<br>
+You can also use the following keywords ('left', 'center' or 'middle', 'right').<br>
+Additionally you can specify an offset in pixel with the keywords like this 'left +10'.<br>
+(default = 0)<br>
+<br>
+$y:<br>
+You can also use the following keywords ('top', 'center' or 'middle', 'bottom').<br>
+Additionally you can specify an offset in pixel with the keywords like this 'bottom -10'.<br>
+(default = 0)</p></div>
+
+<h3 id="blend">blend</h3>
+<p>Blend two images.</p>
+<p><em></em> <strong>blend</strong> ( [x [, <em>integer</em> y [, <em>integer</em> mode [, <em>integer</em> percent]]]])</p>
+<div class="description"><p>Original image and the image loaded with <a href="#addImage">addImage</a><br>
+IMPORTANT: <a href="#imagecopymerge">imagecopymerged</a> doesn't work with PHP 4.3.2. Bug ID: {@link http://bugs.php.net/bug.php?id=24816 24816}<br><br>
+<br>
+$x:<br>
+negative values are possible.<br>
+You can also use the following keywords ('left', 'center' or 'middle', 'right').<br>
+Additionally you can specify an offset in pixel with the keywords like this 'left +10'.<br>
+(default = 0)<br>
+<br>
+$y:<br>
+negative values are possible.<br>
+You can also use the following keywords ('top', 'center' or 'middle', 'bottom').<br>
+Additionally you can specify an offset in pixel with the keywords like this 'bottom -10'.<br>
+(default = 0)<br>
+<br>
+Possible values for $mode:
+<ul>
+ <li>IMAGE_TOOLBOX_BLEND_COPY</li>
+ <li>IMAGE_TOOLBOX_BLEND_MULTIPLY</li>
+ <li>IMAGE_TOOLBOX_BLEND_SCREEN</li>
+ <li>IMAGE_TOOLBOX_BLEND_DIFFERENCE</li>
+ <li>IMAGE_TOOLBOX_BLEND_EXCLUSION</li>
+ <li>IMAGE_TOOLBOX_BLEND_OVERLAY</li>
+</ul><br>
+<br>
+$percent:<br>
+alpha value in percent of blend effect (0 - 100)<br>
+(default = 100)</p></div>
+
+<h3 id="getServerFeatures">getServerFeatures</h3>
+<p>Returns an assocative array with information about the image features of this server</p>
+<p><em>array</em> <strong>getServerFeatures</strong> ( <em>void</em>)</p>
+<div class="description"><p>Array values:
+<ul>
+<li>'gd_version' -> what GD version is installed on this server (e.g. 2.0)</li>
+<li>'gif' -> 0 = not supported, 1 = reading is supported, 2 = creating is supported</li>
+<li>'jpg' -> 0 = not supported, 1 = reading is supported, 2 = creating is supported</li>
+<li>'png' -> 0 = not supported, 1 = reading is supported, 2 = creating is supported</li>
+<li>'ttf' -> TTF text creation. true = supported, false = not supported
+</ul></p></div>
+
+<h3 id="newImage">newImage</h3>
+<p>Flush all image resources and init a new one</p>
+<p><em></em> <strong>newImage</strong> ( <em>void</em>)</p>
+<div class="description"><p>Parameter:<br>
+<i>string</i> <b>$file</b> imagefile to load<br>
+Or:<br>
+<i>integer</i> <b>$width</b> imagewidth of new image to be created<br>
+<i>integer</i> <b>$height</b> imageheight of new image to be created<br>
+<i>string</i> <b>$fillcolor</b> optional fill the new image with this color (hexformat, e.g. '#FF0000')<br></p></div>
+
+<h3 id="newOutputSize">newOutputSize</h3>
+<p>Resize the current image</p>
+<p><em>bool</em> <strong>newOutputSize</strong> ( <em>integer</em> width, <em>integer</em> height [, <em>bool</em> crop [, <em>bool</em> autorotate]])</p>
+<div class="description"><p>if $width = 0 the new width will be calculated from the $height value preserving the correct aspectratio.<br><br>
+<br>
+if $height = 0 the new height will be calculated from the $width value preserving the correct aspectratio.<br><br>
+<br>
+if $crop is set to true the image will be cropped if necessary to preserve the aspectratio and avoid image distortions.<br>
+(default = false)<br>
+<br>
+if $autorotate is set to true the given $width and $height values may "change place" if the given image bias is different from the original one.<br>
+if either $width or $height is 0, the new size will be applied to either the new width or the new height based on the bias value of the original image.<br>
+(default = false)</p></div>
+
+<h3 id="output">output</h3>
+<p>Output a image to the browser</p>
+<p><em>bool</em> <strong>output</strong> ( [output_type [, <em>integer</em> output_quality [, <em>bool</em> dither]]])</p>
+<div class="description"><p>$output_type can be one of the following:<br>
+<ul>
+<li>'gif' -> gif image (if supported) (8-bit indexed colors)</li>
+<li>'png' -> png image (if supported) (truecolor)</li>
+<li>'png8' -> png image (if supported) (8-bit indexed colors)</li>
+<li>'jpg' -> jpeg image (if supported) (truecolor)</li>
+</ul>
+(default: same as original)<br>
+<br>
+$dither:<br>
+If this is true than dither is used on the conversion from truecolor to 8-bit indexed imageformats (png8, gif)<br>
+(default = false)</p></div>
+
+<h3 id="save">save</h3>
+<p>Save a image to disk</p>
+<p><em>bool</em> <strong>save</strong> ( <em>string</em> filename [, output_type [, <em>integer</em> output_quality [, <em>bool</em> dither]]])</p>
+<div class="description"><p>$output_type can be one of the following:<br>
+<ul>
+<li>'gif' -> gif image (if supported) (8-bit indexed colors)</li>
+<li>'png' -> png image (if supported) (truecolor)</li>
+<li>'png8' -> png image (if supported) (8-bit indexed colors)</li>
+<li>'jpg' -> jpeg image (if supported) (truecolor)</li>
+</ul>
+(default: same as original)<br>
+<br>
+$dither:<br>
+If this is true than dither is used on the conversion from truecolor to 8-bit indexed imageformats (png8, gif)<br>
+(default = false)</p></div>
+
+<h3 id="setResizeMethod">setResizeMethod</h3>
+<p>Sets the resize method of choice</p>
+<p><em>bool</em> <strong>setResizeMethod</strong> (method)</p>
+<div class="description"><p>$method can be one of the following:<br>
+<ul>
+<li>'resize' -> supported by every version of GD (fast but ugly resize of image)</li>
+<li>'resample' -> only supported by GD version >= 2.0 (slower but antialiased resize of image)</li>
+</ul></p></div>
+
+<address>Documentation generated by
+<a href="http://maettig.com/">TM::PHPDoc</a></address>
+
+</body>
+</html>

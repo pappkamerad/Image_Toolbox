@@ -1,0 +1,51 @@
+<html>
+<head>
+	<title>Image_Toolbox</title>
+	<meta name="description" content="This class provides an easy to use library to the PHP GD-based image functions."/>
+	<meta name="author" content="Martin Theimer">
+	<meta name="keywords" content="PHP, class, image, imagefunctions, resize, photoshop, GD">
+</head>
+<body>
+<h2>Image_Toolbox</h2>
+<br/>
+This class provides an easy to use library to the PHP GD-based image functions.<br/>
+<br/>
+<a href="http://sourceforge.net/projects/image-toolbox">Sourceforge project / Download</a><br/>
+<a href="docs">Documentation (PhpDocumentor)</a><br/>
+<a href="Image_Toolbox_manual.html">Documentation (TM::PHPDoc)</a><br/>
+<a href="examples">Examples</a><br/>
+<br/>
+<b>Features:</b>
+<ul>
+<li>Compatible with PHP >= 4.0.6 and all GD versions</li>
+<li>Many smart and useful resize options</li>
+<li>TTF text generation</li>
+<li>Merging of images with many photoshop-like blend modes</li>
+<li>Save images to disk or output to browser</li>
+<li>Fully documented and written in PEAR coding style</li>
+</ul>
+<br/>
+<b>Changelog:<br/></b>
+<br/>
+<b>1.1.0</b>&nbsp;(2003/12/05)<br/>
+<li>added 2 workaround-functions for the missing resample functions (high-quality resizing) in GD versions < 2.0.<br>
+<i>setResizeMethod('workaround')</i> - VERY slow. ok for downsizing.<br>
+or <i>setResizeMethod('workaround2')</i> - VERY VERY slow. good results for down- and upsizing.
+</li>
+<li>changed the <i>crop</i> parameter (boolean) in <i>newOuputSize</i> to a <i>mode</i> parameter (integer) to handle more resizing-calculation methods<br>
+0 -> image will be resized to the new output size, regardless of the original aspectratio. (default)<br>
+1 -> image will be cropped if necessary to preserve the aspectratio and avoid image distortions.<br>
+2 -> image will be resized preserving its original aspectratio. differences to the new outputsize will be filled with $bgcolor<br>
+</li>
+<li>little fix for <i>addText</i> on windows plattforms</li>
+<br/><br/>
+<b>1.0.2</b>&nbsp;(2003/11/09)<br/>
+<li>fixed bug with GD versions < 2.0</li>
+<br/><br/>
+<b>1.0.1</b>&nbsp;(2003/11/08)<br/>
+<li>first release</li>
+<br/>
+<br/>
+<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=94278&amp;type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a>
+</body>
+</html>
